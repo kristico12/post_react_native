@@ -4,7 +4,8 @@ import { createStackNavigator, createMaterialTopTabNavigator, createDrawerNaviga
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // views
-import HomeScreen from './views/home';
+import Login from './views/login';
+import Register from './views/register';
 
 // Menu - drawer 
 //import Item1 from './views/item1';
@@ -22,8 +23,8 @@ import CustomTitleComponents from './components/customTitleComponent';
 export const Routes = createAppContainer(
     createStackNavigator(
         {
-            Home: {
-                screen: HomeScreen,
+            Login: {
+                screen: Login,
                 navigationOptions: () => ({
                     header: null,
                 }),
@@ -87,9 +88,15 @@ export const Routes = createAppContainer(
                     header: CustomTitleComponents,
                 })
             },
+            Register: {
+                screen: Register,
+                navigationOptions: () => ({
+                    header: null,
+                }),
+            },
         },
         {
-            initialRouteName: 'Home',
+            initialRouteName: 'Login',
         }
     )
 );
