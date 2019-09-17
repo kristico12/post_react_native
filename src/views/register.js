@@ -1,67 +1,111 @@
 // Dependencies
-import React from 'react';
+import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-native-easy-grid';
-import { Text, Image, StyleSheet, ScrollView, View, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { Text, Image, StyleSheet, ScrollView, View, TextInput, TouchableOpacity, TouchableHighlight, Keyboard } from 'react-native';
 
-function Register(props) {
-    const input = [
-        'nombre',
-        'ciudad',
-        'username',
-        'password',
-    ]
-    return (
-        <Grid>
-            <Row size={1} style={style.containerImage}>
-                <Image style={style.titleImage} source={require('../img/title.png')} />
-            </Row>
-            <Row size={3} style={style.containerRegister}>
-                <Col>
-                    <Row size={3}>
-                        <Col>
-                            <Row size={1}>
-                                <View style={style.containerRegisterTitle}>
-                                    <Text style={style.title}>Register</Text>
-                                </View>
+
+const TitleComponent = () => (
+    <View style={style.containerRegisterTitle}>
+        <Text style={style.title}>Register</Text>
+    </View>
+)
+const ButtonComponent = (props) => (
+    <Col>
+        <Row size={3}>
+            <TouchableOpacity
+                style={StyleSheet.flatten(props.open ? [style.buttonRegister, { height: 60 }] : [style.buttonRegister])}
+                onPress={() => props.navigation.navigate('Dasboard')}
+            >
+                <Text style={style.textRegister}>Register</Text>
+            </TouchableOpacity>
+        </Row>
+        <Row size={1} style={style.containerButtonRegister}>
+            <TouchableHighlight
+                underlayColor="#9e9e9e"
+                onPress={() => props.navigation.navigate('Login')}
+            >
+                <Text style={style.textLogin}>Ya tiene Cuenta?, Inicia Session</Text>
+            </TouchableHighlight>
+        </Row>
+    </Col>
+)
+
+class Register extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isOpenKeyboard: false,
+        }
+    }
+    componentDidMount() {
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow.bind(this));
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide.bind(this));
+    }
+    componentWillUnmount() {
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
+    }
+
+    _keyboardDidShow() {
+        this.setState({ isOpenKeyboard: true })
+    }
+
+    _keyboardDidHide() {
+        this.setState({ isOpenKeyboard: false })
+    }
+    render() {
+        const input = [
+            'nombre',
+            'ciudad',
+            'username',
+            'password',
+        ]
+        return (
+            <Grid>
+                <Row size={1} style={style.containerImage}>
+                    <Image style={style.titleImage} source={require('../img/title.png')} />
+                </Row>
+                <Row size={3} style={style.containerRegister}>
+                    <Col>
+                        <Row size={this.state.isOpenKeyboard ? 4 : 3}>
+                            <Col>
+                                {
+                                    !this.state.isOpenKeyboard &&
+                                    <Row size={1}>
+                                        <TitleComponent />
+                                    </Row>
+                                }
+                                <Row size={this.state.isOpenKeyboard ? 4 : 3}>
+                                    <ScrollView>
+                                        {
+                                            this.state.isOpenKeyboard && <TitleComponent />
+                                        }
+                                        {
+                                            input.map(value => (
+                                                <View key={value} style={style.containerRegisterInput}>
+                                                    <Text style={style.labelInput}>{value}</Text>
+                                                    <TextInput style={style.input} />
+                                                </View>
+                                            ))
+                                        }
+                                        {
+                                            this.state.isOpenKeyboard && <ButtonComponent {...this.props} open={this.state.isOpenKeyboard} />
+                                        }
+                                    </ScrollView>
+                                </Row>
+                            </Col>
+                        </Row>
+                        {
+                            !this.state.isOpenKeyboard &&
+                            <Row style={style.containerButtonRegister} size={1}>
+                                <ButtonComponent {...this.props} />
                             </Row>
-                            <Row size={3}>
-                                <ScrollView>
-                                    {
-                                        input.map(value => (
-                                            <View key={value} style={style.containerRegisterInput}>
-                                                <Text style={style.labelInput}>{value}</Text>
-                                                <TextInput style={style.input} />
-                                            </View>
-                                        ))
-                                    }
-                                </ScrollView>
-                            </Row>
-                        </Col>
-                    </Row>
-                    <Row style={style.containerButtonRegister} size={1}>
-                        <Col>
-                            <Row size={3}>
-                                <TouchableOpacity
-                                    style={style.buttonRegister}
-                                    onPress={() => props.navigation.navigate('Dasboard')}
-                                >
-                                    <Text style={style.textRegister}>Register</Text>
-                                </TouchableOpacity>
-                            </Row>
-                            <Row size={1} style={style.containerButtonRegister}>
-                                <TouchableHighlight
-                                    underlayColor="#9e9e9e"
-                                    onPress={() => props.navigation.navigate('Login')}
-                                >
-                                    <Text style={style.textLogin}>Ya tiene Cuenta?, Inicia Session</Text>
-                                </TouchableHighlight>
-                            </Row>
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
-        </Grid>
-    )
+                        }
+                    </Col>
+                </Row>
+            </Grid>
+        )
+    }
 }
 const style = StyleSheet.create({
     containerImage: {
