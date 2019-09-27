@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-native-easy-grid';
 import { Text, Image, StyleSheet, ScrollView, View, TextInput, TouchableOpacity, TouchableHighlight, Keyboard } from 'react-native';
-
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const TitleComponent = () => (
     <View style={style.containerRegisterTitle}>
@@ -35,6 +35,14 @@ class Register extends Component {
         super(props);
         this.state = {
             isOpenKeyboard: false,
+            user: {
+                name: '',
+                identificationcard: '',
+                birthdate: new Date(),
+                city: '',
+                username: '',
+                password: ''
+            }
         }
     }
     componentDidMount() {
@@ -55,10 +63,12 @@ class Register extends Component {
     }
     render() {
         const input = [
-            'nombre',
-            'ciudad',
-            'username',
-            'password',
+            { name: 'Nombre', value: this.state.user.name, type: 'text' },
+            { name: 'Identificacion', value: this.state.user.identificationcard, type: 'number' },
+            { name: 'Fecha de Nacimiento', value: this.state.user.birthdate, type: 'date' },
+            { name: 'Ciudad', value: this.state.user.city, type: 'text' },
+            { name: 'UserName', value: this.state.user.username, type: 'text' },
+            { name: 'Password', value: this.state.user.password, type: 'password' }
         ]
         return (
             <Grid>
@@ -82,9 +92,20 @@ class Register extends Component {
                                         }
                                         {
                                             input.map(value => (
-                                                <View key={value} style={style.containerRegisterInput}>
-                                                    <Text style={style.labelInput}>{value}</Text>
-                                                    <TextInput style={style.input} />
+                                                <View key={value.name} style={style.containerRegisterInput}>
+                                                    <Text style={style.labelInput}>{value.name}</Text>
+                                                    {
+                                                        (['text', 'number', 'password'].includes(value.type)) ?
+                                                            <TextInput style={style.input} value={value.value} />
+                                                            :
+                                                            <DateTimePicker
+                                                                value={value.value}
+                                                                mode='date'
+                                                                is24Hour={true}
+                                                                display="default"
+                                                                //onChange={this.setDate}
+                                                            />
+                                                    }
                                                 </View>
                                             ))
                                         }
