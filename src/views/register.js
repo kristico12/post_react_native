@@ -1,7 +1,10 @@
 // Dependencies
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Grid, Row, Col } from 'react-native-easy-grid';
-import { Text, Image, StyleSheet, ScrollView, View, TextInput, TouchableOpacity, TouchableHighlight, Keyboard } from 'react-native';
+import {
+    Text, Image, StyleSheet, ScrollView, View, TextInput,
+    TouchableOpacity, TouchableHighlight, Keyboard, Button
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const TitleComponent = () => (
@@ -42,7 +45,8 @@ class Register extends Component {
                 city: '',
                 username: '',
                 password: ''
-            }
+            },
+            showDatePicker: false
         }
     }
     componentDidMount() {
@@ -61,7 +65,20 @@ class Register extends Component {
     _keyboardDidHide() {
         this.setState({ isOpenKeyboard: false })
     }
+    handlePickerDate(e, date) {
+        const user = Object.assign({}, this.state.user);
+        if (e.type !== undefined) {
+            this.setState({ showDatePicker: false }, () => {
+                if (e.type === "set") {
+                    user['birthdate'] = date;
+                    this.setState({ user });
+                }
+            })
+        }
+    }
     render() {
+        const maxDate = new Date();
+        maxDate.setFullYear(maxDate.getFullYear() - 18);
         const input = [
             { name: 'Nombre', value: this.state.user.name, type: 'text' },
             { name: 'Identificacion', value: this.state.user.identificationcard, type: 'number' },
@@ -98,13 +115,24 @@ class Register extends Component {
                                                         (['text', 'number', 'password'].includes(value.type)) ?
                                                             <TextInput style={style.input} value={value.value} />
                                                             :
-                                                            <DateTimePicker
-                                                                value={value.value}
-                                                                mode='date'
-                                                                is24Hour={true}
-                                                                display="default"
-                                                                //onChange={this.setDate}
-                                                            />
+                                                            <Fragment>
+                                                                <Button
+                                                                    title="Open"
+                                                                    onPress={() => this.setState({ showDatePicker: true })}
+                                                                    color="#00aa00"
+                                                                />
+                                                                {
+                                                                    this.state.showDatePicker &&
+                                                                    <DateTimePicker
+                                                                        value={value.value}
+                                                                        mode='date'
+                                                                        is24Hour={true}
+                                                                        display="default"
+                                                                        maximumDate={maxDate}
+                                                                        onChange={(e, date) => this.handlePickerDate(e, date)}
+                                                                    />
+                                                                }
+                                                            </Fragment>
                                                     }
                                                 </View>
                                             ))
