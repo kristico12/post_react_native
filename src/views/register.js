@@ -82,17 +82,33 @@ class Register extends Component {
             })
         }
     }
+    handleInput(value, type) {
+        const user = Object.assign({}, this.state.user);
+        if (type === 'identificationcard') {
+            let filter = "";
+            for (let i = 0; i < value.length; i++) {
+                const element = value.charAt(i);
+                if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(element)) {
+                    filter = filter + element;
+                }
+            }
+            user[type] = filter;
+        } else {
+            user[type] = value;
+        }
+        this.setState({ user });
+    }
     render() {
         const date = `${this.state.user.birthdate.getDate() < 10 ? `0${this.state.user.birthdate.getDate()}` : this.state.user.birthdate.getDate()}/
         ${this.state.user.birthdate.getMonth() + 1 < 10 ? `0${this.state.user.birthdate.getMonth() + 1}` : this.state.user.birthdate.getMonth() + 1}/
         ${this.state.user.birthdate.getFullYear()}`.split("\n").join("").replace(/ /g, "");
         const input = [
-            { name: 'Nombre', value: this.state.user.name, type: 'text' },
-            { name: 'Identificacion', value: this.state.user.identificationcard, type: 'number' },
-            { name: 'Fecha de Nacimiento', value: this.state.user.birthdate, type: 'date' },
-            { name: 'Ciudad', value: this.state.user.city, type: 'text' },
-            { name: 'UserName', value: this.state.user.username, type: 'text' },
-            { name: 'Password', value: this.state.user.password, type: 'password' }
+            { label: 'Nombre', value: this.state.user.name, type: 'default', name: 'name' },
+            { label: 'Identificacion', value: this.state.user.identificationcard, type: 'numeric', name: 'identificationcard' },
+            { label: 'Fecha de Nacimiento', value: this.state.user.birthdate, type: 'date', name: 'birthdate' },
+            { label: 'Ciudad', value: this.state.user.city, type: 'default', name: 'city' },
+            { label: 'UserName', value: this.state.user.username, type: 'default', name: 'username' },
+            { label: 'Password', value: this.state.user.password, type: 'default', security: true, name: 'password' }
         ]
         return (
             <Grid>
@@ -116,11 +132,17 @@ class Register extends Component {
                                         }
                                         {
                                             input.map(value => (
-                                                <View key={value.name} style={style.containerRegisterInput}>
-                                                    <Text style={style.labelInput}>{value.name}</Text>
+                                                <View key={value.label} style={style.containerRegisterInput}>
+                                                    <Text style={style.labelInput}>{value.label}</Text>
                                                     {
-                                                        (['text', 'number', 'password'].includes(value.type)) ?
-                                                            <TextInput style={style.input} value={value.value} />
+                                                        (['default', 'numeric'].includes(value.type)) ?
+                                                            <TextInput
+                                                                style={style.input}
+                                                                value={value.value}
+                                                                secureTextEntry={value.security || false}
+                                                                keyboardType={value.type}
+                                                                onChangeText={(text) => this.handleInput(text, value.name)}
+                                                            />
                                                             :
                                                             <Fragment>
                                                                 <TouchableOpacity
