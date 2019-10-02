@@ -7,6 +7,12 @@ import {
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+// styles
+import { style } from '../styles/register';
+
+const maxDate = new Date();
+maxDate.setFullYear(maxDate.getFullYear() - 18);
+
 const TitleComponent = () => (
     <View style={style.containerRegisterTitle}>
         <Text style={style.title}>Register</Text>
@@ -41,7 +47,7 @@ class Register extends Component {
             user: {
                 name: '',
                 identificationcard: '',
-                birthdate: new Date(),
+                birthdate: maxDate,
                 city: '',
                 username: '',
                 password: ''
@@ -77,8 +83,9 @@ class Register extends Component {
         }
     }
     render() {
-        const maxDate = new Date();
-        maxDate.setFullYear(maxDate.getFullYear() - 18);
+        const date = `${this.state.user.birthdate.getDate() < 10 ? `0${this.state.user.birthdate.getDate()}` : this.state.user.birthdate.getDate()}/
+        ${this.state.user.birthdate.getMonth() + 1 < 10 ? `0${this.state.user.birthdate.getMonth() + 1}` : this.state.user.birthdate.getMonth() + 1}/
+        ${this.state.user.birthdate.getFullYear()}`.split("\n").join("").replace(/ /g, "");
         const input = [
             { name: 'Nombre', value: this.state.user.name, type: 'text' },
             { name: 'Identificacion', value: this.state.user.identificationcard, type: 'number' },
@@ -116,18 +123,19 @@ class Register extends Component {
                                                             <TextInput style={style.input} value={value.value} />
                                                             :
                                                             <Fragment>
-                                                                <Button
-                                                                    title="Open"
+                                                                <TouchableOpacity
+                                                                    style={style.inputDate}
                                                                     onPress={() => this.setState({ showDatePicker: true })}
-                                                                    color="#00aa00"
-                                                                />
+                                                                >
+                                                                    <Text style={style.inputDateText}>{date}</Text>
+                                                                </TouchableOpacity>
                                                                 {
                                                                     this.state.showDatePicker &&
                                                                     <DateTimePicker
                                                                         value={value.value}
                                                                         mode='date'
                                                                         is24Hour={true}
-                                                                        display="default"
+                                                                        display="spinner"
                                                                         maximumDate={maxDate}
                                                                         onChange={(e, date) => this.handlePickerDate(e, date)}
                                                                     />
@@ -156,89 +164,5 @@ class Register extends Component {
         )
     }
 }
-const style = StyleSheet.create({
-    containerImage: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    titleImage: {
-        width: 350,
-        height: 100
-    },
-    containerRegister: {
-        padding: 25
-    },
-    containerRegisterTitle: {
-        backgroundColor: "#bb9661",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        marginBottom: 40,
-        width: "100%"
-    },
-    title: {
-        fontFamily: "futura-pt",
-        fontWeight: "600",
-        fontSize: 45,
-        letterSpacing: 3.52,
-        lineHeight: 50,
-        textTransform: "uppercase",
-        color: "#fff"
-    },
-    containerRegisterInput: {
-        display: "flex",
-        justifyContent: "flex-start",
-        flexDirection: "column",
-        marginBottom: 20
-    },
-    labelInput: {
-        fontFamily: "proxima-nova",
-        fontWeight: "300",
-        fontStyle: "normal",
-        fontSize: 25,
-        letterSpacing: 0.48,
-        lineHeight: 25,
-        textTransform: "none",
-        color: "#9e9e9e"
-    },
-    input: {
-        borderColor: "#ccc",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderRadius: 2,
-        padding: 12,
-        fontFamily: "sans-serif",
-        fontSize: 20
-    },
-    containerButtonRegister: {
-        display: "flex",
-        justifyContent: "center",
-    },
-    buttonRegister: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        height: "70%",
-        backgroundColor: "transparent",
-        color: "#272727",
-        borderWidth: 1,
-        borderStyle: "solid",
-        borderColor: "#272727",
-    },
-    textRegister: {
-        fontSize: 20,
-        fontWeight: "400",
-        fontStyle: "normal",
-        textTransform: "uppercase",
-        letterSpacing: 1.6
-    },
-    textLogin: {
-        fontSize: 15,
-        fontWeight: "bold",
-        letterSpacing: 1.6,
-        color: 'blue'
-    }
-})
+
 export default Register;
