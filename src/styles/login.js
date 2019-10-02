@@ -11,16 +11,15 @@ export const style = StyleSheet.create({
         width: 350,
         height: 100
     },
-    containerRegister: {
+    containerLogin: {
         padding: 25
     },
-    containerRegisterTitle: {
+    containerLoginTitle: {
         backgroundColor: "#bb9661",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        marginBottom: 40,
-        width: "100%"
+        marginBottom: 40
     },
     title: {
         fontFamily: "futura-pt",
@@ -31,7 +30,7 @@ export const style = StyleSheet.create({
         textTransform: "uppercase",
         color: "#fff"
     },
-    containerRegisterInput: {
+    containerLoginInput: {
         display: "flex",
         justifyContent: "flex-start",
         flexDirection: "column",
@@ -56,11 +55,11 @@ export const style = StyleSheet.create({
         fontFamily: "sans-serif",
         fontSize: 20
     },
-    containerButtonRegister: {
+    containerButtonLogin: {
         display: "flex",
         justifyContent: "center",
     },
-    buttonRegister: {
+    buttonLogin: {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -72,19 +71,7 @@ export const style = StyleSheet.create({
         borderStyle: "solid",
         borderColor: "#272727",
     },
-    inputDate: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        backgroundColor: "transparent",
-        color: "#272727",
-        borderBottomWidth: 1,
-        borderStyle: "solid",
-        borderBottomColor: "#272727",
-        height: 50
-    },
-    inputDateText: {
+    textLogin: {
         fontSize: 20,
         fontWeight: "400",
         fontStyle: "normal",
@@ -92,16 +79,9 @@ export const style = StyleSheet.create({
         letterSpacing: 1.6
     },
     textRegister: {
-        fontSize: 30,
-        fontWeight: "400",
-        fontStyle: "normal",
-        textTransform: "uppercase",
-        letterSpacing: 1.6
-    },
-    textLogin: {
         fontSize: 15,
         fontWeight: "bold",
         letterSpacing: 1.6,
         color: 'blue'
     }
-});
+})
