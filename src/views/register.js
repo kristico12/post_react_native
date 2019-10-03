@@ -6,6 +6,12 @@ import {
     TouchableOpacity, TouchableHighlight, Keyboard, Button
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+
+// actions
+import { CreateUser } from '../redux/reducers/auth/actions';
 
 // styles
 import { style } from '../styles/register';
@@ -23,7 +29,7 @@ const ButtonComponent = (props) => (
         <Row size={3}>
             <TouchableOpacity
                 style={StyleSheet.flatten(props.open ? [style.buttonRegister, { height: 60 }] : [style.buttonRegister])}
-                onPress={() => props.navigation.navigate('Dasboard')}
+                onPress={() => props.register()}
             >
                 <Text style={style.textRegister}>Register</Text>
             </TouchableOpacity>
@@ -52,12 +58,25 @@ class Register extends Component {
                 username: '',
                 password: ''
             },
-            showDatePicker: false
+            showDatePicker: false,
+            loading: false,
         }
     }
     componentDidMount() {
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow.bind(this));
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide.bind(this));
+    }
+    componentDidUpdate(prevProps) {
+        if (prevProps.Auth !== this.props.Auth) {
+            const { Auth } = this.props;
+            if (Auth.token.length > 0) {
+                this.props.navigation.navigate('Dasboard');
+            } else if (typeof Auth.message === 'object') {
+                console.warn(Auth.message);
+            } else if (typeof Auth.message === 'string' && Auth.message.length > 0) {
+                console.warn(Auth.message);
+            }
+        }
     }
     componentWillUnmount() {
         this.keyboardDidShowListener.remove();
@@ -97,6 +116,13 @@ class Register extends Component {
             user[type] = value;
         }
         this.setState({ user });
+    }
+    register() {
+        this.setState({
+            loading: true,
+        }, async () => {
+            await this.props.CreateUser(this.state.user);
+        })
     }
     render() {
         const date = `${this.state.user.birthdate.getDate() < 10 ? `0${this.state.user.birthdate.getDate()}` : this.state.user.birthdate.getDate()}/
@@ -168,7 +194,7 @@ class Register extends Component {
                                             ))
                                         }
                                         {
-                                            this.state.isOpenKeyboard && <ButtonComponent {...this.props} open={this.state.isOpenKeyboard} />
+                                            this.state.isOpenKeyboard && <ButtonComponent {...this.props} open={this.state.isOpenKeyboard} register={() => this.register()} />
                                         }
                                     </ScrollView>
                                 </Row>
@@ -177,7 +203,7 @@ class Register extends Component {
                         {
                             !this.state.isOpenKeyboard &&
                             <Row style={style.containerButtonRegister} size={1}>
-                                <ButtonComponent {...this.props} />
+                                <ButtonComponent {...this.props} register={() => this.register()} />
                             </Row>
                         }
                     </Col>
@@ -186,5 +212,21 @@ class Register extends Component {
         )
     }
 }
+Register.propTypes = {
+    Auth: PropTypes.object.isRequired,
+    CreateUser: PropTypes.func.isRequired,
+}
 
-export default Register;
+const mapStateToProps = state => ({
+    Auth: state.Auth,
+});
+
+const mapDispatchToProps = dispatch => (
+    bindActionCreators(
+        {
+            CreateUser,
+        },
+        dispatch,
+    )
+);
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

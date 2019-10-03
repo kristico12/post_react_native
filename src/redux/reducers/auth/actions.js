@@ -16,25 +16,32 @@ function LoadAuthTokenAction(data) {
 
 // functions call dispacher
 function CreateUser(user) {
-    return async (dispatch) => {
+    return (dispatch) => {
         Call(`${hostName}/api/user/create`, 'POST', user)
-            .then(value => {
-                try {
-                    await AsyncStorage.setItem('@token', value.token)
-                } catch (e) {
-                       
+            .then(async (value) => {
+                if (value.hasOwnProperty("message")) {
+                    dispatch(
+                        LoadAuthTokenAction({ token: '', message: value.message })
+                    )
+                } else {
+                    try {
+                        dispatch(
+                            LoadAuthTokenAction({ token: value.data, message: '' })
+                        )
+                        await AsyncStorage.setItem('@token', value.data);
+                    } catch (e) {
+
+                    }
                 }
-                dispatch(
-                    LoadAuthTokenAction({ token: value.token, message: '' })
-                )
             })
             .catch(error => {
                 dispatch(
-                    LoadAuthTokenAction({ token: '', message: error })
+                    LoadAuthTokenAction({ token: '', message: error.message })
                 )
             })
     };
 }
+
 
 export {
     CreateUser,
