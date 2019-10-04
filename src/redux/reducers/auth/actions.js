@@ -7,9 +7,9 @@ import Call from '../../../utils/call';
 import { hostName } from '../../../utils/globalsVariables';
 
 //actions types reducer
-function LoadAuthTokenAction(data) {
+function TypeActionsDispacht(data, type) {
     return {
-        type: typeAuth.AUTH_GET_TOKEN,
+        type,
         payload: data,
     };
 }
@@ -21,12 +21,12 @@ function CreateUser(user) {
             .then(async (value) => {
                 if (value.hasOwnProperty("message")) {
                     dispatch(
-                        LoadAuthTokenAction({ token: '', message: value.message })
+                        TypeActionsDispacht({ token: '', message: value.message }, typeAuth.AUTH_GET_TOKEN)
                     )
                 } else {
                     try {
                         dispatch(
-                            LoadAuthTokenAction({ token: value.data, message: '' })
+                            TypeActionsDispacht({ token: value.data, message: '' }, typeAuth.AUTH_GET_TOKEN)
                         )
                         await AsyncStorage.setItem('@token', value.data);
                     } catch (e) {
@@ -36,14 +36,28 @@ function CreateUser(user) {
             })
             .catch(error => {
                 dispatch(
-                    LoadAuthTokenAction({ token: '', message: error.message })
+                    TypeActionsDispacht({ token: '', message: error.message }, typeAuth.AUTH_GET_TOKEN)
                 )
             })
     };
+}
+async function LoadAuthToken(dispatch) {
+    try {
+        const token = await AsyncStorage.getItem('@token');
+        if (token !== null) {
+            dispatch(
+                TypeActionsDispacht({ token: token, message: '' }, typeAuth.AUTH_GET_TOKEN)
+            )
+        }
+
+    } catch (e) {
+
+    }
 }
 
 
 export {
     CreateUser,
+    LoadAuthToken
 }
 
