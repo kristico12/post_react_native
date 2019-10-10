@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, ScrollView, Image } from 'react-native';
-import { DrawerItems, SafeAreaView } from 'react-navigation';
+import { DrawerNavigatorItems } from 'react-navigation-drawer';
 import { Grid, Row } from 'react-native-easy-grid';
+import SafeAreaView from 'react-native-safe-area-view';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const CustomDrawerContentComponent = (props) => (
     <Grid>
@@ -10,9 +12,11 @@ const CustomDrawerContentComponent = (props) => (
         </Row>
         <Row size={60}>
             <ScrollView>
-                <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
-                    <DrawerItems {...props} />
-                </SafeAreaView>
+                <SafeAreaProvider>
+                    <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
+                        <DrawerNavigatorItems {...props} />
+                    </SafeAreaView>
+                </SafeAreaProvider>
             </ScrollView>
         </Row>
         <Row size={20} style={styles.footerContainer}>

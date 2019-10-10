@@ -3,7 +3,7 @@ import React, { Component, Fragment } from 'react';
 import { Grid, Row, Col } from 'react-native-easy-grid';
 import {
     Text, Image, StyleSheet, ScrollView, View, TextInput,
-    TouchableOpacity, TouchableHighlight, Keyboard, Button
+    TouchableOpacity, TouchableHighlight, Keyboard
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { connect } from 'react-redux';
@@ -23,7 +23,7 @@ const TitleComponent = () => (
     <View style={style.containerRegisterTitle}>
         <Text style={style.title}>Register</Text>
     </View>
-)
+);
 const ButtonComponent = (props) => (
     <Col>
         <Row size={3}>
@@ -43,7 +43,7 @@ const ButtonComponent = (props) => (
             </TouchableHighlight>
         </Row>
     </Col>
-)
+);
 
 class Register extends Component {
     constructor(props) {
@@ -70,7 +70,7 @@ class Register extends Component {
         if (prevProps.Auth !== this.props.Auth) {
             const { Auth } = this.props;
             if (Auth.token.length > 0) {
-                this.props.navigation.navigate('Dasboard');
+                this.props.navigation.navigate('Dashboard');
             } else if (typeof Auth.message === 'object') {
                 console.warn(Auth.message);
             } else if (typeof Auth.message === 'string' && Auth.message.length > 0) {
@@ -135,7 +135,7 @@ class Register extends Component {
             { label: 'Ciudad', value: this.state.user.city, type: 'default', name: 'city' },
             { label: 'UserName', value: this.state.user.username, type: 'default', name: 'username' },
             { label: 'Password', value: this.state.user.password, type: 'default', security: true, name: 'password' }
-        ]
+        ];
         return (
             <Grid>
                 <Row size={1} style={style.containerImage}>
@@ -215,7 +215,7 @@ class Register extends Component {
 Register.propTypes = {
     Auth: PropTypes.object.isRequired,
     CreateUser: PropTypes.func.isRequired,
-}
+};
 
 const mapStateToProps = state => ({
     Auth: state.Auth,

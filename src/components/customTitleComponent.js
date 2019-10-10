@@ -1,7 +1,7 @@
 // Dependencies
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
-import { DrawerActions } from 'react-navigation';
+import { DrawerActions } from 'react-navigation-drawer';
 import { Grid, Col } from 'react-native-easy-grid';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -28,10 +28,10 @@ const style = StyleSheet.create({
         width: 198,
         height: 45
     }
-})
+});
 
 function CustomTitleComponent(props) {
-    const navigation = props.navigation;
+    const navigation = Object.assign({}, props.navigation);
     return (
         <View style={style.container}>
             <Grid>
@@ -40,11 +40,9 @@ function CustomTitleComponent(props) {
                 >
                     <TouchableOpacity
                         style={style.contentMenu}
-                        onPress={() => {
-                            navigation.dispatch(
-                                props.scene.route.isDrawerOpen ? DrawerActions.closeDrawer() : DrawerActions.openDrawer()
-                            );
-                        }}
+                        onPress={() =>
+                            navigation.dispatch(DrawerActions.toggleDrawer())
+                        }
                     >
                         <Icon name="dehaze" size={45} color="#bb9661" />
                     </TouchableOpacity>

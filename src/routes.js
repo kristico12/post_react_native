@@ -1,7 +1,11 @@
 // Dependencies
 import React from 'react';
-import { createStackNavigator, createMaterialTopTabNavigator, createDrawerNavigator, createAppContainer } from 'react-navigation';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { createDrawerNavigator } from 'react-navigation-drawer';
+import {createStackNavigator} from 'react-navigation-stack';
+import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
 
 // views
 import Login from './views/login';
@@ -72,54 +76,43 @@ const Dashboard =
             },
             {
                 initialRouteName: 'Item1',
-                contentComponent: CustomDrawerComponents
+                contentComponent: CustomDrawerComponents,
             }
         )
-    )
+    );
+
 const Routes =
     createAppContainer(
-        createStackNavigator(
+        createSwitchNavigator(
             {
-                Login: {
-                    screen: (props) => {
-                        if (props.screenProps.store.Auth.token.length > 0) {
-                            return <Dashboard />
-                        } else {
-                            return <Login />
-                        }
+                Auth: createStackNavigator(
+                    {
+                        Login: {
+                            screen: Login
+                        },
+                        Register: {
+                            screen: Register
+                        },
                     },
-                    navigationOptions: () => ({
-                        header: null,
+                    {
+                        initialRouteName: 'Login',
+                    }
+                ),
+                App: createStackNavigator(
+                    {
+                        Dashboard: {
+                            screen: Dashboard
+                        }
+                    }, {
+                        defaultNavigationOptions:  {
+                            header: CustomTitleComponents
+                        }
                     }),
-                },
-                Dasboard: {// para crear un menu tipo slider
-                    screen: (props) => (
-                        props.screenProps.store.Auth.token.length > 0 ?
-                            <Dashboard {...props} />
-                            :
-                            <Login {...props} />
-                    ), //cabecera del menu
-                    navigationOptions: () => ({
-                        title: 'Dashboard',
-                        header: CustomTitleComponents,
-                    })
-                },
-                Register: {
-                    screen: (props) => (
-                        props.screenProps.store.Auth.token.length > 0 ?
-                            <Dashboard {...props} />
-                            :
-                            <Register {...props} />
-                    ),
-                    navigationOptions: () => ({
-                        header: null,
-                    }),
-                },
             },
             {
-                initialRouteName: 'Login',
+                initialRouteName: 'App'
             }
-        )
-    )
 
+        )
+    );
 export default Routes;
