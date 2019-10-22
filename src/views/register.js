@@ -70,7 +70,7 @@ class Register extends Component {
         if (prevProps.Auth !== this.props.Auth) {
             const { Auth } = this.props;
             if (Auth.token.length > 0) {
-                this.props.navigation.navigate('Dashboard');
+                this.props.navigation.navigate('App');
             } else if (typeof Auth.message === 'object') {
                 console.warn(Auth.message);
             } else if (typeof Auth.message === 'string' && Auth.message.length > 0) {

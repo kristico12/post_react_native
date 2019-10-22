@@ -34,7 +34,7 @@ class App extends Component {
                 {
                     this.state.loading &&
                     <Provider store={store}>
-                        <Routes screenProps={{ name: this.state.store.length > 0 ? 'App' : 'Auth' }} />
+                        <Routes />
                     </Provider>
                 }
             </Fragment>

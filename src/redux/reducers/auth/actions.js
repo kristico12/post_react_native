@@ -27,7 +27,7 @@ function CreateUser(user) {
                     try {
                         dispatch(
                             TypeActionsDispacht({ token: value.data, message: '' }, typeAuth.AUTH_GET_TOKEN)
-                        )
+                        );
                         await AsyncStorage.setItem('@token', value.data);
                     } catch (e) {
 
@@ -54,10 +54,18 @@ async function LoadAuthToken(dispatch) {
 
     }
 }
+function ClearAuth() {
+    return (dispatch) => {
+        dispatch(
+            TypeActionsDispacht(null, typeAuth.AUTH_CLEAR)
+        )
+    }
+}
 
 
 export {
     CreateUser,
-    LoadAuthToken
+    LoadAuthToken,
+    ClearAuth
 }
 

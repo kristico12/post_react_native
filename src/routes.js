@@ -18,7 +18,7 @@ import Item3 from './views/item3';
 
 // Menu - tabs
 import Menu1 from './views/menu1';
-import Menu2 from './views/menu2';
+import Profile from './views/profile';
 
 // Custom Drawer Component
 import CustomDrawerComponents from './components/customDrawerComponents';
@@ -38,7 +38,7 @@ const Dashboard =
                                 }
                             },
                             Profile: {
-                                screen: Menu2,
+                                screen: Profile,
                                 navigationOptions: {
                                     tabBarIcon: () => <Icon name="person" size={30} color="#fff" />
                                 }
@@ -88,7 +88,7 @@ const Routes =
                 Auth: createStackNavigator(
                     {
                         Login: {
-                            screen: Login
+                            screen: Login,
                         },
                         Register: {
                             screen: Register
@@ -96,6 +96,9 @@ const Routes =
                     },
                     {
                         initialRouteName: 'Login',
+                        defaultNavigationOptions: {
+                            header: null,
+                        }
                     }
                 ),
                 App: createStackNavigator(
@@ -110,7 +113,7 @@ const Routes =
                     }),
             },
             {
-                initialRouteName: 'App'
+                initialRouteName: 'Auth'
             }
 
         )

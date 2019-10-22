@@ -1,17 +1,17 @@
 // utils
 import { typeAuth } from './type';
 
-const initialstate = {
+const initialState = {
     message: '',
-    token: ''
-}
+    token: '',
+};
 
-export function Auth(state = initialstate, action) {
+export function Auth(state = initialState, action) {
     switch (action.type) {
         case typeAuth.AUTH_GET_TOKEN:
-            return action.payload
+            return action.payload;
         case typeAuth.AUTH_CLEAR:
-            return state
+            return initialState;
         default:
             return state
     }
