@@ -1,7 +1,7 @@
 // Dependencies
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-native-easy-grid';
-import { Text, Image, ScrollView, View, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { Text, Image, ScrollView, View, TextInput, TouchableOpacity, TouchableHighlight, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -16,6 +16,7 @@ class LoginView extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
             auth: {
                 username: '',
                 password: ''
@@ -28,13 +29,22 @@ class LoginView extends Component {
             this.props.navigation.navigate('App');
         }
     }
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.Auth !== this.props.Auth) {
+            if (this.props.Auth.token.length > 0) {
+                this.props.navigation.navigate('App');
+            }   
+        }
+    }
     onChangeText(text, name) {
         const auth = Object.assign({}, this.state.auth);
         auth[name] = text;
         this.setState({ auth });
     }
-    async login() {
-        await this.props.login()
+    Login() {
+        this.setState({ loading: true }, async () => {
+            await this.props.Login(this.state.auth);
+        })
     }
 
     render() {
@@ -71,18 +81,24 @@ class LoginView extends Component {
                         </Row>
                         <Row style={style.containerButtonLogin} size={1}>
                             <Col>
-                                <Row size={3}>
+                                <Row size={this.state.loading ? 2 : 3}>
                                     <TouchableOpacity
                                         style={style.buttonLogin}
-                                        onPress={() => props.navigation.navigate('Dasboard')}
+                                        onPress={() => this.Login()}
                                     >
                                         <Text style={style.textLogin}>login</Text>
                                     </TouchableOpacity>
                                 </Row>
+                                {
+                                    this.state.loading &&
+                                    <Row size={1}>
+                                        <ActivityIndicator size="small" color="#bb9661" />
+                                    </Row>
+                                }
                                 <Row size={1} style={style.containerButtonLogin}>
                                     <TouchableHighlight
                                         underlayColor="#9e9e9e"
-                                        onPress={() => props.navigation.navigate('Register')}
+                                        onPress={() => this.props.navigation.navigate('Register')}
                                     >
                                         <Text style={style.textRegister}>no tiene una cuenta ?, registrese aqui</Text>
                                     </TouchableHighlight>
