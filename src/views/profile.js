@@ -28,7 +28,7 @@ class Profile extends  Component {
                     await this.props.ClearAuth();
                     this.props.navigation.navigate('Auth');
                 } else {
-                    ToastAndroid.TOP(message, 25);
+                    ToastAndroid.showWithGravity(message, ToastAndroid.TOP);
                 }
             } else {
                 this.setState({user: data})

@@ -1,4 +1,4 @@
-const hostName = "http://10.14.156.49:3000";
+const hostName = "http://10.14.156.119:3000";
 
 export {
     hostName,

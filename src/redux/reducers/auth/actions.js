@@ -41,6 +41,32 @@ function CreateUser(user) {
             })
     };
 }
+function Login(auth) {
+    return (dispatch) => {
+        Call(`${hostName}/api/user/login`, 'POST', auth)
+            .then(async (value) => {
+                if (value.hasOwnProperty("message")) {
+                    dispatch(
+                        TypeActionsDispacht({ token: '', message: value.message }, typeAuth.AUTH_GET_TOKEN)
+                    )
+                } else {
+                    try {
+                        dispatch(
+                            TypeActionsDispacht({ token: value.data, message: '' }, typeAuth.AUTH_GET_TOKEN)
+                        );
+                        await AsyncStorage.setItem('@token', value.data);
+                    } catch (e) {
+
+                    }
+                }
+            })
+            .catch(error => {
+                dispatch(
+                    TypeActionsDispacht({ token: '', message: error.message }, typeAuth.AUTH_GET_TOKEN)
+                )
+            })
+    };
+}
 async function LoadAuthToken(dispatch) {
     try {
         const token = await AsyncStorage.getItem('@token');
@@ -66,6 +92,7 @@ function ClearAuth() {
 export {
     CreateUser,
     LoadAuthToken,
-    ClearAuth
+    ClearAuth,
+    Login
 }
 

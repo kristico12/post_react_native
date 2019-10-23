@@ -24,8 +24,8 @@ function Call(url, type, data) {
         fetch(header(url, type, data))
             .then(res => res.json())
             .then(async result => {
-                if (Object.hasOwnProperty('message')) {
-                    const message = Object.hasOwnProperty('message');
+                if (typeof result === 'object' && result.hasOwnProperty('message')) {
+                    const message = result.message;
                     if (message.includes('jwt')) {
                         await AsyncStorage.removeItem('@token');
                     }
